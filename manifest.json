@@ -8,6 +8,14 @@
     "category": "General",
     "versions": [
       {
+        "version": "1.0.2.0",
+        "changelog": "Fix cache issue: prevent 304 responses for index.html so script tag is always injected",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://github.com/richardwerkman/jellyfin-missing-seasons-extension/raw/main/artifacts/missing-seasons-1.0.2.0.zip",
+        "checksum": "e0a3b629a0e7ac7dd4a3f8522701ba86",
+        "timestamp": "2026-03-21T00:00:00Z"
+      },
+      {
         "version": "1.0.1.0",
         "changelog": "Use FileTransformation plugin for script injection",
         "targetAbi": "10.11.0.0",

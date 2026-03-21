@@ -1,5 +1,7 @@
+using Jellyfin.Plugin.MissingSeasons.Middleware;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Plugins;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Jellyfin.Plugin.MissingSeasons;
@@ -12,7 +14,8 @@ public class PluginServiceRegistrator : IPluginServiceRegistrator
     /// <inheritdoc />
     public void RegisterServices(IServiceCollection serviceCollection, IServerApplicationHost applicationHost)
     {
-        // IScheduledTask implementations are auto-discovered by Jellyfin.
-        // No additional service registrations needed at this time.
+        // Prevent 304 responses for index.html so FileTransformation can always
+        // inject our script tag into the response body.
+        serviceCollection.AddSingleton<IStartupFilter, IndexHtmlCacheBustingStartupFilter>();
     }
 }
