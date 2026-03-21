@@ -8,6 +8,14 @@
     "category": "General",
     "versions": [
       {
+        "version": "1.0.3.0",
+        "changelog": "Use Jellyfin native countIndicator/indicator classes for episode count badge",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://github.com/richardwerkman/jellyfin-missing-seasons-extension/raw/main/artifacts/missing-seasons-1.0.3.0.zip",
+        "checksum": "81bce3273ae52ab7c8fd747bbb6eeef3",
+        "timestamp": "2026-03-21T00:00:00Z"
+      },
+      {
         "version": "1.0.2.0",
         "changelog": "Fix cache issue: prevent 304 responses for index.html so script tag is always injected",
         "targetAbi": "10.11.0.0",

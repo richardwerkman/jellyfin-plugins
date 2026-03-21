@@ -89,22 +89,8 @@
                 text-transform: uppercase;
             }
 
-            .missing-season-episode-count {
-                position: absolute;
-                top: 0;
-                right: 0;
-                background: #00a4dc;
-                color: #fff;
-                min-width: 22px;
-                height: 22px;
-                line-height: 22px;
-                text-align: center;
-                border-radius: 50%;
-                font-size: 0.75em;
-                font-weight: 700;
-                z-index: 10;
-                padding: 0 4px;
-                box-sizing: border-box;
+            .missing-season-card .cardIndicators {
+                pointer-events: none !important;
             }
         `;
         document.head.appendChild(style);
@@ -239,7 +225,9 @@
                     <div class="cardContent">
                         <div class="cardImageContainer coveredImage cardContent-shadow itemAction lazy">
                             <div class="missing-season-badge">Not available</div>
-                            <div class="missing-season-episode-count">${season.episodeCount}</div>
+                            <div class="cardIndicators">
+                                <div class="countIndicator indicator">${season.episodeCount}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
