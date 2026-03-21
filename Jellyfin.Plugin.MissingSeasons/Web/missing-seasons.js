@@ -1,12 +1,3 @@
-// ==UserScript==
-// @name         Jellyfin Missing Seasons
-// @namespace    jellyfin-missing-seasons
-// @version      1.0.0
-// @description  Shows missing seasons in a series as grayed-out indicators using TMDB data.
-// @match        */web/index.html*
-// @match        */web/*
-// @grant        none
-// ==/UserScript==
 
 // Jellyfin Missing Seasons Plugin
 // Uses the same public TMDB API key that Jellyfin's server uses internally.

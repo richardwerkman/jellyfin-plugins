@@ -1,0 +1,20 @@
+[
+  {
+    "guid": "a4b5c6d7-1234-5678-9abc-def012345678",
+    "name": "Missing Seasons",
+    "description": "Shows missing seasons in a series as grayed-out indicators using TMDB data. Missing season cards are automatically injected into the series detail page so you can easily see which seasons you're missing.",
+    "overview": "Shows missing seasons in a series using TMDB data",
+    "owner": "richardwerkman",
+    "category": "General",
+    "versions": [
+      {
+        "version": "1.0.0.0",
+        "changelog": "Initial release",
+        "targetAbi": "10.11.0.0",
+        "sourceUrl": "https://github.com/richardwerkman/jellyfin-missing-seasons-extension/raw/main/artifacts/missing-seasons-1.0.0.0.zip",
+        "checksum": "47ee1b13d8e769d802566f19289a480b",
+        "timestamp": "2025-07-17T00:00:00Z"
+      }
+    ]
+  }
+]
