@@ -72,7 +72,7 @@ README.md
 
 ## Build & Release Process
 
-Only release when explicitly asked!
+Important! Only release when explicitly asked.
 
 Use the release script — it handles everything automatically:
 
