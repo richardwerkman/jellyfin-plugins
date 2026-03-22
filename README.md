@@ -21,7 +21,7 @@ A Jellyfin plugin that displays missing seasons in your library as grayed-out, n
 - Series must have TMDB metadata (automatic with default metadata providers)
 - [FileTransformation plugin](https://github.com/jellyfin/jellyfin-plugin-filetransformation) installed on server (for v1.0.2+)
 
-## Installation (Plugin Method — Recommended)
+## Installation
 
 ### Step 1: Add the Repository
 
@@ -53,20 +53,6 @@ After restart, do a **hard refresh** to clear the cached index.html:
 - **macOS:** `Cmd+Shift+R`
 
 ✅ **Done!** Navigate to any series with missing seasons and they should appear as grayed-out cards.
-
-## Installation (Userscript Method — Alternative)
-
-If you prefer a userscript instead of a server plugin:
-
-1. Install [Tampermonkey](https://www.tampermonkey.net/) in your browser
-2. Create a new script and paste the contents of [`missing-seasons.js`](missing-seasons.js) from this repo
-3. Update the `@match` URL to match your Jellyfin instance:
-   ```javascript
-   // @match        https://your-jellyfin-server.com/*
-   ```
-4. Save and reload your Jellyfin web page
-
-This method works in any browser without server changes, but requires Tampermonkey.
 
 ## How It Works
 
