@@ -1,5 +1,9 @@
+using System.Reflection;
+using System.Runtime.Loader;
+using Jellyfin.Plugin.MissingSeasons.Helpers;
 using MediaBrowser.Model.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace Jellyfin.Plugin.MissingSeasons.Services;
 
@@ -34,9 +38,37 @@ public class StartupService : IScheduledTask
     /// <inheritdoc />
     public Task ExecuteAsync(IProgress<double> progress, CancellationToken cancellationToken)
     {
-        _logger.LogInformation(
-            "Missing Seasons: script injection is handled directly by the ASP.NET Core middleware. " +
-            "The FileTransformation plugin is not required.");
+        var payload = new JObject
+        {
+            { "id", "b1c2d3e4-5678-9abc-def0-123456789abc" },
+            { "fileNamePattern", "index.html" },
+            { "callbackAssembly", GetType().Assembly.FullName },
+            { "callbackClass", typeof(IndexHtmlInjector).FullName },
+            { "callbackMethod", nameof(IndexHtmlInjector.FileTransformer) }
+        };
+
+        Assembly? fileTransformationAssembly =
+            AssemblyLoadContext.All.SelectMany(x => x.Assemblies)
+                .FirstOrDefault(x => x.FullName?.Contains(".FileTransformation") ?? false);
+
+        if (fileTransformationAssembly == null)
+        {
+            _logger.LogWarning("FileTransformation plugin not found. Missing Seasons script injection unavailable.");
+            return Task.CompletedTask;
+        }
+
+        Type? pluginInterfaceType = fileTransformationAssembly
+            .GetType("Jellyfin.Plugin.FileTransformation.PluginInterface");
+
+        if (pluginInterfaceType == null)
+        {
+            _logger.LogWarning("FileTransformation PluginInterface type not found. Missing Seasons script injection unavailable.");
+            return Task.CompletedTask;
+        }
+
+        _logger.LogInformation("Registering Missing Seasons for FileTransformation plugin.");
+        pluginInterfaceType.GetMethod("RegisterTransformation")?.Invoke(null, [payload]);
+
         return Task.CompletedTask;
     }
 

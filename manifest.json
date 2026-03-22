@@ -9,14 +9,6 @@
     "imageUrl": "https://raw.githubusercontent.com/richardwerkman/jellyfin-missing-seasons-extension/main/logo.png",
     "versions": [
       {
-        "version": "1.2.2.0",
-        "changelog": "Self-contained script injection: no longer depends on FileTransformation plugin. The middleware now injects the script tag directly, fixing servers where FileTransformation is broken.",
-        "targetAbi": "10.11.0.0",
-        "sourceUrl": "https://github.com/richardwerkman/jellyfin-missing-seasons-extension/raw/main/artifacts/missing-seasons-1.2.2.0.zip",
-        "checksum": "93f8c67d00a6225eb04d1519f248e270",
-        "timestamp": "2026-03-22T00:00:00Z"
-      },
-      {
         "version": "1.2.1.0",
         "changelog": "Upcoming seasons show 'Upcoming' badge instead of 'Not available'",
         "targetAbi": "10.11.0.0",
