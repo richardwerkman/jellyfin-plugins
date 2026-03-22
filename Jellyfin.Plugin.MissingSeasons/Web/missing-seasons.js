@@ -245,6 +245,7 @@
             ? season.posterPath
             : null;
 
+        const badgeText = season.upcoming ? 'Upcoming' : 'Not available';
         const dateBadgeHtml = season.upcoming
             ? `<div class="upcoming-date-badge">${escapeHtml(formatAirDate(season.airDate))}</div>`
             : '';
@@ -255,7 +256,7 @@
                     <div class="cardPadder cardPadder-overflowPortrait"></div>
                     <div class="cardContent">
                         <div class="cardImageContainer coveredImage cardContent-shadow itemAction lazy">
-                            <div class="missing-season-badge">Not available</div>
+                            <div class="missing-season-badge">${escapeHtml(badgeText)}</div>
                             ${dateBadgeHtml}
                             <div class="cardIndicators">
                                 <div class="countIndicator indicator">${season.episodeCount}</div>

@@ -8,9 +8,10 @@ A Jellyfin plugin that displays missing seasons in your library as grayed-out, n
 
 - **Missing season detection** — Scans TMDB data to find seasons you don't have in your library
 - **Grayed-out display** — Missing seasons appear with grayscale filter and "Not available" badge
+- **Upcoming seasons** — Future seasons already listed on TMDB appear with an "Upcoming" badge and their release date shown at the bottom-left of the card
 - **Episode count badge** — Shows the number of episodes in each missing season (using Jellyfin's native badge styling)
 - **TMDB artwork** — Displays official poster art from The Movie Database
-- **Smart filtering** — Only shows already-aired seasons (upcoming seasons excluded)
+- **Adaptable display order** — Configure whether missing seasons are interleaved in their natural position or grouped after all available seasons (via plugin settings page)
 - **Correct ordering** — Inserts missing seasons in chronological order among existing seasons
 - **Non-interactive** — Missing season cards are unclickable and can't be played
 - **Automatic injection** — Uses FileTransformation plugin for seamless script injection (v1.0.2+)
