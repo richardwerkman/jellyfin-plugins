@@ -14,7 +14,6 @@ A Jellyfin plugin that displays missing seasons in your library as grayed-out, n
 - **Adaptable display order** — Configure whether missing seasons are interleaved in their natural position or grouped after all available seasons (via plugin settings page)
 - **Correct ordering** — Inserts missing seasons in chronological order among existing seasons
 - **Non-interactive** — Missing season cards are unclickable and can't be played
-- **Automatic injection** — Uses FileTransformation plugin for seamless script injection (v1.0.2+)
 
 ## Requirements
 
