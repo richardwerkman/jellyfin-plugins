@@ -1,4 +1,4 @@
-# Jellyfin Missing Seasons Extension
+# Jellyfin Missing Seasons Plugin
 
 A Jellyfin plugin that displays missing seasons in your library as grayed-out, non-interactive indicators using TMDB metadata. Instantly see which seasons you're missing for any series.
 
