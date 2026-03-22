@@ -122,9 +122,57 @@ create_test_media() {
     touch "$show_dir/Season 03/Breaking Bad S03E${ep}.mkv"
   done
   ok "Test media created."
+
+  # The Boys (TMDB id: 76479) — S1-S3 on disk; S4 missing; S5 upcoming 2026-04-07
+  local boys_dir="$MEDIA_DIR/shows/The Boys (2019)"
+  log "Creating test media — The Boys S1-S3 (S4 missing, S5 upcoming 2026-04-07)..."
+  mkdir -p "$boys_dir/Season 01" "$boys_dir/Season 02" "$boys_dir/Season 03"
+
+  for ep in 01 02 03 04 05 06 07 08; do
+    touch "$boys_dir/Season 01/The Boys S01E${ep}.mkv"
+  done
+  for ep in 01 02 03 04 05 06 07 08; do
+    touch "$boys_dir/Season 02/The Boys S02E${ep}.mkv"
+  done
+  for ep in 01 02 03 04 05 06 07 08; do
+    touch "$boys_dir/Season 03/The Boys S03E${ep}.mkv"
+  done
+  ok "The Boys test media created."
 }
 
-# ── Step 4: Copy plugin DLL ───────────────────────────────────────────────────
+# ── Step 4a: Ensure FileTransformation plugin is installed ────────────────────
+# The Missing Seasons plugin requires the FileTransformation plugin from
+# IAmParadox27 to inject its client script into index.html.
+
+ensure_file_transformation_plugin() {
+  local ft_version="2.5.5.0"
+  local ft_dir="$CONFIG_DIR/plugins/FileTransformation_${ft_version}"
+  local ft_dll="$ft_dir/Jellyfin.Plugin.FileTransformation.dll"
+
+  if [[ -f "$ft_dll" ]]; then
+    ok "FileTransformation plugin already installed."
+    return
+  fi
+
+  log "Downloading FileTransformation plugin v${ft_version}..."
+  mkdir -p "$ft_dir"
+  local zip_url="https://github.com/IAmParadox27/jellyfin-plugin-file-transformation/releases/download/${ft_version}/Release-10.10.7.zip"
+  local tmp_zip
+  tmp_zip=$(mktemp /tmp/ft-plugin-XXXXXX.zip)
+
+  if ! curl -sfL "$zip_url" -o "$tmp_zip"; then
+    err "Failed to download FileTransformation plugin. Check your internet connection."
+  fi
+
+  if ! unzip -p "$tmp_zip" Jellyfin.Plugin.FileTransformation.dll > "$ft_dll"; then
+    err "Failed to extract FileTransformation plugin DLL."
+  fi
+
+  rm -f "$tmp_zip"
+  ok "FileTransformation plugin installed."
+}
+
+# ── Step 4b: Copy plugin DLL ──────────────────────────────────────────────────
 
 copy_plugin() {
   local version
@@ -309,6 +357,12 @@ print_summary() {
   echo "    On TMDB  : Seasons 1–5"
   echo "    Missing  : 2, 4, 5  ← displayed by the plugin"
   echo ""
+  echo "  Test show : The Boys (TMDB id: 76479)"
+  echo "    On disk  : Season 1, Season 2, Season 3"
+  echo "    On TMDB  : Seasons 1–5"
+  echo "    Missing  : 4  ← displayed by the plugin"
+  echo "    Upcoming : 5 (2026-04-07)  ← upcoming date badge"
+  echo ""
   echo "  After the library scan finishes, open the Breaking Bad"
   echo "  series page to see the missing seasons plugin in action."
   echo ""
@@ -323,6 +377,7 @@ print_summary() {
 check_docker
 build_plugin
 create_test_media
+ensure_file_transformation_plugin
 copy_plugin
 start_jellyfin
 wait_for_jellyfin

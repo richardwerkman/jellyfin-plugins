@@ -44,6 +44,12 @@
         return div.innerHTML;
     }
 
+    function formatAirDate(airDate) {
+        // Parse as UTC noon to avoid timezone shifts on date-only strings
+        const d = new Date(airDate + 'T12:00:00Z');
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    }
+
     // ── CSS Injection ────────────────────────────────────────────────────
 
     function injectStyles() {
@@ -98,6 +104,20 @@
             .missing-season-card .cardIndicators {
                 pointer-events: none !important;
             }
+
+            .upcoming-date-badge {
+                position: absolute;
+                bottom: 8px;
+                left: 8px;
+                background: rgba(0, 0, 0, 0.75);
+                color: #fff;
+                padding: 2px 8px;
+                border-radius: 3px;
+                font-size: 0.75em;
+                font-weight: 600;
+                z-index: 10;
+                letter-spacing: 0.5px;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -127,9 +147,9 @@
             .filter(s => {
                 // Exclude "Specials" (season 0)
                 if (s.season_number === 0) return false;
-                // Only include released seasons
+                // Must have an air date to be relevant
                 if (!s.air_date) return false;
-                return new Date(s.air_date) <= now;
+                return true;
             })
             .map(s => ({
                 seasonNumber: s.season_number,
@@ -137,7 +157,8 @@
                 episodeCount: s.episode_count,
                 airDate: s.air_date,
                 posterPath: s.poster_path,
-                overview: s.overview
+                overview: s.overview,
+                upcoming: new Date(s.air_date + 'T12:00:00Z') > now
             }));
     }
 
@@ -224,6 +245,10 @@
             ? season.posterPath
             : null;
 
+        const dateBadgeHtml = season.upcoming
+            ? `<div class="upcoming-date-badge">${escapeHtml(formatAirDate(season.airDate))}</div>`
+            : '';
+
         card.innerHTML = `
             <div class="cardBox cardBox-bottompadded">
                 <div class="cardScalable">
@@ -231,6 +256,7 @@
                     <div class="cardContent">
                         <div class="cardImageContainer coveredImage cardContent-shadow itemAction lazy">
                             <div class="missing-season-badge">Not available</div>
+                            ${dateBadgeHtml}
                             <div class="cardIndicators">
                                 <div class="countIndicator indicator">${season.episodeCount}</div>
                             </div>
@@ -272,32 +298,38 @@
         log(`Processing "${seriesInfo.Name}" (TMDB: ${tmdbId})`);
 
         // Fetch data in parallel
-        const [tmdbSeasons, jellyfinSeasons] = await Promise.all([
+        const [allTmdbSeasons, jellyfinSeasons] = await Promise.all([
             getTmdbSeasons(tmdbId),
             getJellyfinSeasons(itemId)
         ]);
 
-        if (!tmdbSeasons.length) {
+        if (!allTmdbSeasons.length) {
             log('No TMDB seasons found or API error.');
             return;
         }
+
+        // Split into released and upcoming
+        const releasedTmdbSeasons = allTmdbSeasons.filter(s => !s.upcoming);
+        const upcomingTmdbSeasons = allTmdbSeasons.filter(s => s.upcoming);
 
         // Determine which seasons are in Jellyfin
         const localSeasonNumbers = new Set(
             jellyfinSeasons.map(s => s.IndexNumber).filter(n => n != null)
         );
 
-        // Find missing seasons
-        const missingSeasons = tmdbSeasons.filter(s => !localSeasonNumbers.has(s.seasonNumber));
+        // Find missing released seasons (aired but not in Jellyfin)
+        const missingReleasedSeasons = releasedTmdbSeasons.filter(s => !localSeasonNumbers.has(s.seasonNumber));
 
-        if (!missingSeasons.length) {
-            log(`"${seriesInfo.Name}" has all released seasons.`);
+        if (!missingReleasedSeasons.length && !upcomingTmdbSeasons.length) {
+            log(`"${seriesInfo.Name}" has all released seasons and no upcoming seasons.`);
             return;
         }
 
-        log(`Found ${missingSeasons.length} missing season(s):`, missingSeasons.map(s => s.name));
+        log(`Found ${missingReleasedSeasons.length} missing and ${upcomingTmdbSeasons.length} upcoming season(s).`);
 
-        injectMissingSeasons(missingSeasons, localSeasonNumbers, tmdbSeasons);
+        // Combine for injection — missing released first, then upcoming
+        const seasonsToInject = [...missingReleasedSeasons, ...upcomingTmdbSeasons];
+        injectMissingSeasons(seasonsToInject, localSeasonNumbers, allTmdbSeasons);
     }
 
     function injectMissingSeasons(missingSeasons, localSeasonNumbers, allTmdbSeasons) {
@@ -369,7 +401,7 @@
                     const card = buildMissingSeasonCard(season);
                     seasonContainer.appendChild(card);
                 }
-                log('Missing season cards injected (available-first mode).');
+                log('Season cards injected (available-first mode).');
             } else {
                 // Default mode: interleave missing seasons at their natural numeric position
                 for (const season of missingSeasons) {
@@ -405,7 +437,7 @@
                         }
                     }
                 }
-                log('Missing season cards injected (interleaved mode).');
+                log('Season cards injected (interleaved mode).');
             }
         }
 
