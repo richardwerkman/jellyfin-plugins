@@ -70,7 +70,6 @@ After restart, do a **hard refresh** to clear the cached index.html:
 
 ## Uninstallation
 
-### Plugin Method
 1. Go to **Dashboard** → **Plugins**
 2. Click the ⚙️ gear icon next to **Missing Seasons**
 3. Click **Uninstall**
