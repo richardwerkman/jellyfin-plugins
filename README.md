@@ -52,8 +52,6 @@ After restart, do a **hard refresh** to clear the cached index.html:
 - **Windows/Linux:** `Ctrl+Shift+R`
 - **macOS:** `Cmd+Shift+R`
 
-✅ **Done!** Navigate to any series with missing seasons and they should appear as grayed-out cards.
-
 ## How It Works
 
 1. **Detection** — Plugin loads when you navigate to a series detail page
@@ -77,11 +75,6 @@ After restart, do a **hard refresh** to clear the cached index.html:
 2. Click the ⚙️ gear icon next to **Missing Seasons**
 3. Click **Uninstall**
 4. Restart Jellyfin
-
-### Userscript Method
-1. Open Tampermonkey dashboard
-2. Click the trash icon next to "Jellyfin Missing Seasons"
-3. Confirm deletion
 
 ## Troubleshooting
 
